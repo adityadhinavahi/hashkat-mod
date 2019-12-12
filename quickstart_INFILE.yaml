@@ -1,0 +1,114 @@
+# quickstart_INFILE:  rename to INFILE.yaml to run
+# for more detailed configuration, save DEFAULT.yaml as INFILE.yaml & configure INFILE.yaml 
+
+analysis:
+  initial_agents:
+    10
+  max_agents: 
+    1000
+  max_time: 
+    1000000
+  max_real_time: 
+    1
+  use_followback: 
+    true       
+  use_follow_via_retweets:
+    true
+  follow_model: 
+    random
+  # model weights ONLY necessary for follow method 'twitter'
+  model_weights: {random: 0.0, twitter_suggest: 0.0, agent: 0.0, preferential_agent: 0.0, hashtag: 0.0}
+
+  stage1_unfollow: 
+    true
+  unfollow_tweet_rate: 
+    10000
+  use_hashtag_probability:
+    0.5
+
+rates:
+  add: {function: constant, value: 0.0}
+
+ideologies:
+  - name: Red
+  - name: Blue
+  - name: Green
+  - name: Orange
+
+# must have 3 regions however all except one may have a zero add_weight
+
+regions:
+  - name: userNamedRegion0
+    add_weight: 5
+
+    preference_class_weights: {NoRetweetPref: 100}
+    ideology_weights: {Red: 100, Blue: 100, Green: 100, Orange: 100}
+    language_weights: {English: 100, French: 0, Spanish: 0, French+English: 0}
+
+  - name: userNamedRegion1
+    add_weight: 0
+
+    preference_class_weights: {NoRetweetPref: 100}
+    ideology_weights: {Red: 100, Blue: 100, Green: 100, Orange: 100}
+    language_weights: {English: 0, French: 100, Spanish: 0, French+English: 0}
+
+  - name: userNamedRegion2
+    add_weight: 0
+
+    preference_class_weights: {NoRetweetPref: 100}
+    ideology_weights: {Red: 100, Blue: 100, Green: 100, Orange: 100}
+    language_weights: {English: 0, French: 0, Spanish: 100, French+English: 0}
+
+# preference_classes are retweet rates by tweet_type and agent_type
+# all = all agent_types; else = all agent_types not named.
+
+preference_classes:   
+ - name: userNamedPrefClass0
+
+   tweet_transmission: 
+      plain: # Also applies to musical tweets
+        Standard: 0.01
+        Celebrity: 0.05
+        else: 0.01
+      different_ideology:
+        all: 0.00
+      same_ideology:
+        all: 0.01
+      humorous:
+        Standard: 0.02
+        Celebrity: 0.05
+        else: 0.02
+
+ - name: NoRetweetPref
+
+   tweet_transmission: 
+      plain: # Also applies to musical tweets
+        all: 0
+      different_ideology:
+        all: 0
+      same_ideology:
+        all: 0
+      humorous:
+        all: 0
+agents:
+  - name: Standard
+    weights:
+      # Weight with which this agent is created
+      add: 100.0
+      # Weight with which this agent is followed by other agents in agent follow
+      follow: 5
+      tweet_type:
+        ideological: 1.0
+        plain: 1.0
+        musical: 1.0
+        humorous: 1.0
+    # Probability that following this agent results in a follow-back
+    followback_probability: .44
+    hashtag_follow_options:
+      care_about_region: false # does the agent care about the region of the agent they will follow?
+      care_about_ideology: false # does the agent care about the ideology of the agent they will follow?
+    rates: 
+        # Rate for follows from this agent:   #rate this agent follows other agents
+        follow: {function: constant, value: 0.0001}
+        # Rate for tweets from this agent:
+        tweet: {function: constant, value: 0.001}

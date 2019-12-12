@@ -1,0 +1,29 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Unknown </title></head><body>
+<p>Plans to develeop the <em>REST API</em>.....</p>
+<h3 id="on-the-python-side">On the python side:</h3>
+<p>```
+import os
+import time
+import json</p>
+<p>path = "input/queries.json"
+os.mkfifo(path)</p>
+<h1 id="todo-create-another-pipe-this-way-for-hashkat-to-write-results-into">TODO Create another pipe this way for hashkat to write results into</h1>
+<p>fifo = open(path, "w")
+while True:
+    time.sleep(1)
+    # Write one query into the pipe
+    # TODO send a signal to hashkat
+    query = {"query": {"query_type": "agent_info", "agent_id": -1, "tweet_id": -1}}
+        query_string = json.dumps(query)
+    fifo.write(query_string + '\n')
+    fifo.flush()
+fifo.close()
+```</p>
+<h3 id="on-the-c-side">On the C++ side</h3>
+<p><code>See analyzer_api.cpp.
+Queries are read from standard input, with a signal sent to indicate that standard input should be checked.</code></p>
+<h2 id="current-working-features">Current working features:</h2>
+<p>With enable_query_api enabled in INFILE, run:</p>
+<p>echo -e '{"type":"add_tweet_stream","stream_path":"path"}\n' | ./run.sh
+Press ctrl-c during execution to have tweets routed to 'path'.</p>
+</body></html>

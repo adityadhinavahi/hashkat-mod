@@ -1,0 +1,78 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Unknown </title></head><body>
+<h1 id="the-source-code">The Source Code</h1>
+<p>Here we will give a brief description of all the files and directories that encompass the source code.</p>
+<h2 id="dependencies">dependencies</h2>
+<p>Contains various files needed for the running of <strong><em>#k@</em></strong>.</p>
+<h2 id="unit_tests">unit_tests</h2>
+<p>Tests that have been run throughout the construction of <strong><em>#k@</em></strong>.</p>
+<h2 id="util">util</h2>
+<p>Contains <em>HashedEdgeSet.h</em>, which uses the Google SparseHash data structure to represent following/follower sets, <em>SerializeBufferFileMock.h</em>, which enables Google SparseHash to write into the <em>network_state.dat</em> file, and <em>StatCalc.h</em>, which is used for computing standard deviation incrementally. </p>
+<h2 id="cmakeliststxt">CMakeLists.txt</h2>
+<p>Used to compile the code.</p>
+<h2 id="categorygrouperh">CategoryGrouper.h</h2>
+<p>Handles categorizing agents. Creates the data structures that enable categorizing agents into bins based on the number of tweets, retweets, and follows they have, and moves them into different bins if any of these tweet, retweet, or follow values change.</p>
+<h2 id="circularbufferh">CircularBuffer.h</h2>
+<p>Implements a data buffer that deletes its oldest element when its capacity is reached.</p>
+<h2 id="datareadwriteh">DataReadWrite.h</h2>
+<p>Handles the reading and writing to the <em>network_state.dat</em> file.</p>
+<h2 id="followersetcpp">FollowerSet.cpp</h2>
+<p>Handles the organizing of each agent's list of followers based on region, language, etc. as well as this lists size and the addition or removal of a follower.</p>
+<h2 id="followerseth">FollowerSet.h</h2>
+<p>Header file for <em>FollowerSet.cpp</em>.</p>
+<h2 id="followingsetcpp">FollowingSet.cpp</h2>
+<p>Handles the organizing of each agent's list of agent ids they are following based on region, language, etc. as well as this lists size and the addition or removal of an agent id they are following.</p>
+<h2 id="followingseth">FollowingSet.h</h2>
+<p>Header file for <em>FollowingSet.h</em>.</p>
+<h2 id="ratetreeh">RateTree.h</h2>
+<p>Used to store tweets.</p>
+<h2 id="timedepbinnerh">TimeDepBinner.h</h2>
+<p>Used for updating the retweets. Handles moving tweeters into different bins after certain amounts of time has elapsed, giving them less and less of a chance of having their tweet be retweeted.</p>
+<h2 id="tweetbankcpp">TweetBank.cpp</h2>
+<p>Updates the age of a tweet, and organizes tweets by when they occur, lowering the probability that they will be retweeted as time progresses.</p>
+<h2 id="tweetbankh">TweetBank.h</h2>
+<p>Takes the list of followers an agent has and organizes it in a way so that followers who retweet an agent are ones that are most similar to the agent personality-wise (e.g. they share the same ideology).</p>
+<h2 id="agenth">agent.h</h2>
+<p>Contains the <em>Agent</em> struct which determines the characteristics and collects information on each and every agent in the network, such as their id number, agent type, number of tweets made, number of followers, etc., and ensures that this is written into the <em>network_state.dat</em> file. Also contains the <em><em>AgentType</em> struct, which determines the characteristics of each agent type and ensures that it is also written into </em>network_state.dat*. </p>
+<h2 id="analyzerh">analyzer.h</h2>
+<p>Stores all of the information in a network simulation.</p>
+<h2 id="analyzer_followcpp">analyzer_follow.cpp</h2>
+<p>Deals with how agents follow and unfollow each other through the various follow and unfollow methods in <strong><em>#k@</em></strong>.</p>
+<h2 id="analyzer_maincpp">analyzer_main.cpp</h2>
+<p>The principle file in the source code, it contains the main KMC loop and prompts agents to be created, to tweet, or to retweet.</p>
+<h2 id="analyzer_ratescpp">analyzer_rates.cpp</h2>
+<p>Manages updating all the rates present in <strong><em>#k@</em></strong> and adding them together to find the cumulative rate function at every time step. This allows us to move forward in time correctly via the KMC Loop. The rates being updated are the add, tweet, retweet, and follow rates, as well as of course the cumulative rate function. If necessary, new simulated months are created in this file and rates are updated accordingly if any of them happen to change over time.</p>
+<h2 id="analyzer_retweetcpp">analyzer_retweet.cpp</h2>
+<p>Manages all the retweets in a simulation, determines which agents will be retweeting a tweet, and updates a tweet's relevance and the retweet rate since they change over time.</p>
+<h2 id="analyzer_selectcpp">analyzer_select.cpp</h2>
+<p>Determines which agent is selected at every KMC step to make a tweet, retweet, etc. Ensures that the agent selection process is done so properly.</p>
+<h2 id="config_dynamiccpp">config_dynamic.cpp</h2>
+<p>Reads the input file. Parses all the necessary information from the input file.</p>
+<h2 id="config_dynamich">config_dynamic.h</h2>
+<p>All the information obtained in <em>config_dynamic.cpp</em> is stored here in the <em>ParsedConfig</em> struct, which is then stored in the <em>analyzer.h</em> file.</p>
+<h2 id="config_statich">config_static.h</h2>
+<p>File where certain fixed configurations of the network simulation are made, namely the tweet types and languages present in the simulation, as well as the maximum follow models, preference classes, agent types, regions, and ideologies present in the network.</p>
+<h2 id="eventscpp">events.cpp</h2>
+<p>Contains functions which control the actions you can make in interactive mode.</p>
+<h2 id="eventsh">events.h</h2>
+<p>Header file used to allow other '.cpp' files to call the functions found in <em>events.cpp</em>.</p>
+<h2 id="gexflua">gexf.lua</h2>
+<p>File used to create the 'gexf' file format for use with interactive mode.</p>
+<h2 id="interactive_modecpp">interactive_mode.cpp</h2>
+<p>File used to construct and run interactive mode.</p>
+<h2 id="interactive_modeh">interactive_mode.h</h2>
+<p>Header file corresponding to 'interactive_mode.cpp' allowing other files to call the 'start_interactive_mode(AnalysisState&amp; state)' function.</p>
+<h2 id="interactive_modelua">interactive_mode.lua</h2>
+<p>Used in the running of interactive mode. </p>
+<h2 id="iocpp">io.cpp</h2>
+<p>Used for analysis at the completion of a network simulation. Makes calculations based on the data collected to create the output files</p>
+<h2 id="ioh">io.h</h2>
+<p>Header file corresponding to <em>io.cpp</em> that enables other files to call particular functions from it.</p>
+<h2 id="maincpp">main.cpp</h2>
+<p>When running a network simulation, this is the file that will read in <em>INFILE.yaml</em>, and call <em>analyzer_main.cpp</em>. It also prints to the screen certain information about the network simulation such as the version of <strong><em>#k@</em></strong> you are using, the seed you will be using, and how long the analysis took in real time. </p>
+<h2 id="networkh">network.h</h2>
+<p>Contains the <em>Network</em> struct which places all the <em>Agent</em> structs into an array and several convenient network queries.</p>
+<h2 id="tweetsh">tweets.h</h2>
+<p>Sets all the information stored within tweets.</p>
+<h2 id="utilh">util.h</h2>
+<p>Contains helper functions. </p>
+</body></html>
