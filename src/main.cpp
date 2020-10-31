@@ -43,12 +43,7 @@
 #include "network.h"
 #include "analyzer.h"
 #include "io.h"
-#include <stdio.h> 
-#include <sys/socket.h> 
-#include <arpa/inet.h> 
-#include <unistd.h> 
-#include <string.h> 
-#define PORT 12345
+
 using namespace std;
 
 // Check for a command-line flag

@@ -337,11 +337,11 @@ void brief_agent_statistics(AnalysisState& state) {
 // NETWORK.GEXF edgelist for R (analysis), python executable (drawing), and gephi output file
 
 void output_position(Network& network) {
-/*    static const int OUTPUT_THRESHOLD = 10000;
-    int n_agents = network.size();
-    ofstream output1;
-    output1.open("output/network.gexf");
-    output1 << "<gexf version=\"1.2draft\">\n"
+    static const int OUTPUT_THRESHOLD = 10000;
+   // int n_agents = network.size();
+    //ofstream output1;
+    /*output1.open("output/network.gexf");
+    output1 << "<gexf version=\"1.2\">\n"
             << "<meta lastmodifieddate=\"2013-11-21\">\n"
             << "<creator> Kevin Ryczko </creator>\n"
             << "<description> Social Network Visualization </description>\n"
@@ -365,16 +365,43 @@ void output_position(Network& network) {
         }
         output1 << "</edges>\n" << "</graph>\n" << "</gexf>";
         output1.close();
-    } else {
-        MTwist rng;*/
-        //rng.init_genrand(/* Fixed seed */ 2);
-      /*  int fraction_users = 10000;
+
+    }*/
+	int n_agents = network.size();
+	int count = 0;
+	    socket_communication::Client client("127.0.0.1",3420);
+	    if (n_agents <= OUTPUT_THRESHOLD) {
+		//for (int i = 0; i < n_agents; i++) {
+		        //Agent& p = network[i];
+		        //output1 << "<node id=\"" << i << "\" label=\"" << p.agent_type << "\" />\n";
+		//}
+		//output1 << "</nodes>\n" << "<edges>\n";
+		for (int id = 0; id < n_agents; id++) {
+		    	for (int id_fol : network.following_set(id).as_vector()){
+	
+			client.Send("ae");
+			ostringstream str1,str2;
+			str1<<id;
+			string strw = str1.str();
+			client.Send(strw);
+			str2<<id_fol;
+			string strs = str2.str();
+			client.Send(strs);
+			client.Send("a");
+			count++;
+			}
+		}
+	}
+	 else {
+        MTwist rng;
+        rng.init_genrand(/* Fixed seed */ 2);
+        int fraction_users = 10000;
         vector<int> user_ids (fraction_users);
         for (int& id : user_ids) {
             id = rng.rand_int(n_agents);
         }
 
-        for (int& id : user_ids) {
+        /*for (int& id : user_ids) {
                 Agent& p = network[id];
                 output1 << "<node id=\"" << id << "\" label=\"" << p.agent_type << "\" />\n";
 
@@ -383,17 +410,24 @@ void output_position(Network& network) {
                     output1 << "<node id=\"" << id_fol << "\" label=\"" << p1.agent_type << " - followed"<< "\" />\n";
                 }
         }
-        output1 << "</nodes>\n" << "<edges>\n";
+        output1 << "</nodes>\n" << "<edges>\n";*/
         int count = 0;
         for (int& id : user_ids) {
             for (int id_fol : network.following_set(id).as_vector()) {
-                output1 << "<edge id=\"" << count << "\" source=\""
-                        << id << "\" target=\"" << id_fol << "\"/>\n";
-                count++;
+			client.Send("ae");
+			ostringstream str1,str2;
+			str1<<id;
+			string strw = str1.str();
+			client.Send(strw);
+			str2<<id_fol;
+			string strs = str2.str();
+			client.Send(strs);
+			client.Send("a");
+			count++;
             }
         }
-        output1 << "</edges>\n" << "</graph>\n" << "</gexf>";
-        output1.close();
+        //output1 << "</edges>\n" << "</graph>\n" << "</gexf>";
+        //output1.close();
     }
 
 // NETWORK.DAT
@@ -407,22 +441,6 @@ void output_position(Network& network) {
         }
     }
     output.close();
-// NODES.TXT
-	ofstream output3;
-	ofstream output4;
-	output3.open("output/nodes.txt");
-	output4.open("output/edges.txt");
-	for (int i = 0; i < n_agents; i++) {
-                Agent& p = network[i];
-                output3 << i << "\n";
-        }
-	for (int id = 0; id < n_agents; id++) {
-		        for (int id_fol : network.following_set(id).as_vector()) {
-		            output4 << id << " " << id_fol << "\n";
-		        }
-		    }
-    output3.close();
-    output4.close();
 
 // NETWORK.GRAPHML
 
@@ -446,31 +464,7 @@ void output_position(Network& network) {
         output2 << "</edges>\n" << "</graph>\n" << "</graphml>";
         output2.close();
     }
-
-*/
-    static const int OUTPUT_THRESHOLD = 10000;
-    int n_agents = network.size();
-// NODES.TXT
-	ofstream output3;
-	ofstream output4;
-	ofstream output5;
-	output3.open("output/label.txt",ios::app);
-	output4.open("output/source.txt",ios::app);
-	output5.open("output/target.txt",ios::app);
-	for (int i = 0; i < n_agents; i++) {
-                output3 << i << "\n";
-        }
-	for (int id = 0; id < n_agents; id++) {
-		        for (int id_fol : network.following_set(id).as_vector()) {
-		            output4 << id << "\n";
-			    output5<< id_fol << "\n";
-		        }
-		    }
-    output3.close();
-    output4.close();
-    output5.close();
-
-}
+} 
 
 // MODEL_MATCH.DAT
 

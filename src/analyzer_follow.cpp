@@ -25,7 +25,7 @@
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
-
+#include "client.hpp"
 #include "lcommon/perf_timer.h"
 #include "events.h"
 #include "analyzer.h"
@@ -62,7 +62,57 @@ struct AnalyzerFollow {
    /***************************************************************************
     * Agent mutation routines
     ***************************************************************************/
- 
+       int add_edge(int id_follower, int agent_to_follow){
+	//AnalyzerFollow analyzer(state);	
+	//if(analyzer.sock==-1){
+	    //return -1;
+	//}
+	socket_communication::Client client("127.0.0.1",3420);
+        ostringstream str1;
+	str1 << id_follower;
+	string strw = str1.str();
+        ostringstream str2;
+	str2 << agent_to_follow;
+	string stre = str2.str();
+	//char* id_foll = (char*)id_follower;
+	//char* agent_to_foll = (char*)agent_to_follow;	
+	/*	int len = to_string(id_follower).length();
+	string oz = "0";
+	string twz = "00";
+	string thz = "000";
+	string foz = "0000";
+	string fiz = "00000";
+	int ldiff = 5-len;
+	if(ldiff>0){
+		if(ldiff==1){
+			strw.insert(0,foz);
+		}
+		else if(ldiff==2)
+			strw.insert(0,thz);
+		else if(ldiff==3)
+			strw.insert(0,twz);
+		else if(ldiff==4)
+			strw.insert(0,oz);
+	}
+		int len1 = to_string(agent_to_follow).length();
+	int ldiff1 = 5-len1;
+	if(ldiff1>0){
+		if(ldiff==1){
+			stre.insert(0,foz);
+		}
+		else if(ldiff==2)
+			stre.insert(0,thz);
+		else if(ldiff==3)
+			stre.insert(0,twz);
+		else if(ldiff==4)
+			stre.insert(0,oz);
+	}*/
+	client.Send("ae");
+	client.Send(strw);
+	client.Send(stre);
+	client.Send("a");
+	return 0;
+    }
     void flag_chatty_agent(Agent& actor, int id_target) {
         actor.chatty_agents.push_back(id_target);
     }
@@ -316,9 +366,9 @@ struct AnalyzerFollow {
        ASSERT(false, "Should not pick ");
        return -1;
     }
-	        int create_connection(){
+	       // int create_connection(){
 	   // sleep(5); 
-	    int sock = 0, valread; 
+	    /*int sock = 0, valread; 
 	    struct sockaddr_in serv_addr;
 	    char buffer[1024] = {0}; 
 	    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
@@ -343,58 +393,10 @@ struct AnalyzerFollow {
 		return -1; 
 	    } 
 	    return sock;
-	  }
-	int sock = create_connection();
+	  }*/
+	//int sock = create_connection();
    // Returns false to signify that nothing occurred.
-   int add_edge(int id_follower, int agent_to_follow){
-	AnalyzerFollow analyzer(state);	
-	if(analyzer.sock==-1){
-	    return -1;
-	}
-        ostringstream str1;
-	str1 << id_follower;
-	string strw = str1.str();
-        ostringstream str2;
-	str2 << agent_to_follow;
-	string stre = str2.str();
-	//char* id_foll = (char*)id_follower;
-	//char* agent_to_foll = (char*)agent_to_follow;	
-		int len = to_string(id_follower).length();
-	string oz = "0";
-	string twz = "00";
-	string thz = "000";
-	string foz = "0000";
-	string fiz = "00000";
-	int ldiff = 5-len;
-	if(ldiff>0){
-		if(ldiff==1){
-			strw.insert(0,foz);
-		}
-		else if(ldiff==2)
-			strw.insert(0,thz);
-		else if(ldiff==3)
-			strw.insert(0,twz);
-		else if(ldiff==4)
-			strw.insert(0,oz);
-	}
-		int len1 = to_string(agent_to_follow).length();
-	int ldiff1 = 5-len1;
-	if(ldiff1>0){
-		if(ldiff==1){
-			stre.insert(0,foz);
-		}
-		else if(ldiff==2)
-			stre.insert(0,thz);
-		else if(ldiff==3)
-			stre.insert(0,twz);
-		else if(ldiff==4)
-			stre.insert(0,oz);
-	}
-	send(analyzer.sock,"ae",2,0);
-	send(analyzer.sock,const_cast<char*>(strw.c_str()),strw.size(),0);
-	send(analyzer.sock,const_cast<char*>(stre.c_str()),stre.size(),0);
-	return 0;
-    }
+
 
     bool follow_agent(int id_follower, double time_of_follow) {
         Agent& e = network[id_follower];

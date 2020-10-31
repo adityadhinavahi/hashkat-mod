@@ -42,14 +42,10 @@ extern "C" {
 #include "network.h"
 #include "agent.h"
 #include "tweets.h"
-
+#include "client.hpp"
 #include "serialization.h"
 #include "TweetBank.h"
-#include <stdio.h> 
-#include <sys/socket.h> 
-#include <arpa/inet.h> 
-#include <unistd.h> 
-#include <string.h> 
+
 extern volatile int SIGNAL_ATTEMPTS;
 
 // Global network stats
@@ -142,7 +138,7 @@ struct AnalysisState {
     // This will be copied at the end of the simulation, exposing it.
     int n_follows;
     double end_time;
-    int sock;
+
     /* tweet_bank: The central tweeting data-structure.
    
      Holds all the incoming 'tweets', abstract packages of information that are 
@@ -254,8 +250,6 @@ struct AnalysisState {
         // Don't serialize interactive_mode_state
         ar(NVP(rng));
     }
-   
-
 };
 
 enum SelectionType {

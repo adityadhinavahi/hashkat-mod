@@ -63,7 +63,7 @@ class JSONClient(object):
 
 class GephiClient(JSONClient):
     
-    def __init__(self, url='http://127.0.0.1:8080/workspace0', autoflush=False):
+    def __init__(self, url='http://127.0.0.1:8080/workspace0', autoflush=False,enable_timestamps=True):
         JSONClient.__init__(self, autoflush)
         self.url = url
         

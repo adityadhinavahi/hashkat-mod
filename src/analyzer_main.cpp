@@ -41,7 +41,7 @@
 #include "io.h"
 #include "tweets.h"
 #include "config_static.h"
-
+#include "client.hpp"
 #include "dependencies/lcommon/Timer.h"
 #include "dependencies/lcommon/perf_timer.h"
 
@@ -169,7 +169,7 @@ struct Analyzer {
              action_create_agent();
         }
     }
-        int create_connection(){
+        /*int create_connection(){
 	   // sleep(5); 
 	    int sock = 0, valread; 
 	    struct sockaddr_in serv_addr;
@@ -197,7 +197,7 @@ struct Analyzer {
 	    } 
 	    return sock;
 	  }
-	int sock = create_connection();
+	int sock = create_connection();*/
     /***************************************************************************
      * Analysis routines
      ***************************************************************************/
@@ -329,10 +329,7 @@ struct Analyzer {
 
     // ROOT ANALYSIS ROUTINE
     /* Run the main analysis routine using this config. */
-    void run_network_simulation(Timer& timer) {
-	if(sock!=-1){
-		cout<<"Connection Success\n";
-	}        
+    void run_network_simulation(Timer& timer) {        
 	if (config.output_stdout_summary)
             cout << setw(25)
             << "Simulation Time (min)" << setw(25)
@@ -365,25 +362,20 @@ struct Analyzer {
         }
     }
 
-    int end_connection(){
-	send(sock,"a",1,0);
-	return 0;
-	}
+
     int add_node(int id){
-	if(sock==-1){
-			return -1;
-		}
+	socket_communication::Client client("127.0.0.1",3420);
 	ostringstream str1;
 	str1 << id;
 	string strw = str1.str();
 	int len = to_string(id).length();
-	string oz = "0";
-	string twz = "00";
-	string thz = "000";
-	string foz = "0000";
-	string fiz = "00000";
-	int ldiff = 5-len;
-	if(ldiff>0){
+	//string oz = "0";
+	//string twz = "00";
+	//string thz = "000";
+	//string foz = "0000";
+	//string fiz = "00000";
+	//int ldiff = 5-len;
+	/*if(ldiff>0){
 		if(ldiff==1){
 			strw.insert(0,foz);
 		}
@@ -393,9 +385,10 @@ struct Analyzer {
 			strw.insert(0,twz);
 		else if(ldiff==4)
 			strw.insert(0,oz);
-	}
-	send(sock,"an",2,0);
-	send(sock,const_cast<char*>(strw.c_str()),strw.size(),0);
+	}*/
+	client.Send("an");
+	client.Send(strw);
+	client.Send("a");
 	return 0;
 	}
     /* Create a new agent at the next index. */
@@ -404,13 +397,14 @@ struct Analyzer {
 
         if (network.size() == network.max_size()) {
             // Make sure we do not try to add!
-	    end_connection();
+	    
             return false;
         }
 
         int id = network.size();
-        network.grow();
-	add_node(id);
+	add_node(id);        
+	network.grow();
+	
         double creation_time = time;
         Agent& e = network[id];
 
@@ -719,8 +713,8 @@ struct Analyzer {
         } else {
             error_exit("step_analysis: event out of bounds");
         }
-	/*static const int OUTPUT_THRESHOLD = 10000;
-	    int n_agents = network.size();
+	static const int OUTPUT_THRESHOLD = 10000;
+	    /*int n_agents = network.size();
 	    ofstream output1;
 	    output1.open("output/network.gexf");
 	    output1 << "<gexf version=\"1.2\">\n"
@@ -731,21 +725,9 @@ struct Analyzer {
 		    << "<graph mode=\"static\" defaultedgetype=\"directed\">\n"
 		    << "<nodes>\n";
 	    int count = 0;
-	    // Only output position for small networks:
-	    if (n_agents <= OUTPUT_THRESHOLD) {
-		for (int i = 0; i < n_agents; i++) {
-		        Agent& p = network[i];
-		        output1 << "<node id=\"" << i << "\" label=\"" << p.agent_type << "\" />\n";
-		}
-		output1 << "</nodes>\n" << "<edges>\n";
-		for (int id = 0; id < n_agents; id++) {
-		    for (int id_fol : network.following_set(id).as_vector()) {
-		        output1 << "<edge id=\"" << count << "\" source=\"" << id
-		                << "\" target=\"" << id_fol << "\"/>\n";
-		        count++;
-		    }
-		}
-        output1 << "</edges>\n" << "</graph>\n" << "</gexf>";
+	    // Only output position for small networks:*/
+	    
+        /*output1 << "</edges>\n" << "</graph>\n" << "</gexf>";
         output1.close();*/     
         step_time(timer);
         stats.n_steps++;
@@ -946,7 +928,8 @@ void analyzer_main(AnalysisState& state) {
     signal_handlers_uninstall(state);
     lua_hook_exit(state);
     Analyzer an(state);
-    send(state.sock,"exit",4,0);
+    socket_communication::Client client("127.0.0.1",3420);
+    client.Send("exit");
     // Print summary time:
     printf("'analyzer_main' took %.2f milliseconds.\n", timer.get_microseconds() / 1000.0);
 	
